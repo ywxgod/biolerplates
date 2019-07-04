@@ -1,0 +1,144 @@
+npm install -D:
+
+webpack, webpack-cli, webpack-dev-server, shx, nodemon
+@babel/core, @babel/preset-env, @babel/preset-react, babel-loader
+@babel/plugin-proposal-class-properties, @babel/plugin-proposal-object-rest-spread, @babel/plugin-syntax-dynamic-import
+style-loader, css-loader, sass-loader, node-sass, file-loader, url-loader
+
+html-webpack-plugin, uglifyjs-webpack-plugin, 
+
+
+npm install -S:
+react, react-dom, antd, @babel/polyfill
+
+
+css优化:
+1. 将css从js中分离出来。
+	安装插件：mini-css-extract-plugin
+	const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+	plugins配置加入：
+	new MiniCssExtractPlugin({
+        filename: './styles/[name]-[contenthash:8].css',
+        chunkFilename: './styles/chunk-[name]-[contenthash:8].css'
+    })
+    rules配置加入：
+    {
+		test: /\.s?[ac]ss$/,
+		use: [
+			isProd?{loader:MiniCssExtractPlugin.loader,options:{publicPath: '../'}}:'style-loader',
+			{loader:'css-loader',options:{importLoaders:1}},
+			'sass-loader'
+		]
+	}
+2. 删除无用的css
+	安装glob,purgecss-webpack-plugin(原purifycss-webpack),purify-css
+	npm install glob purgecss-webpack-plugin purify-css --save-dev
+	plugins配置加入：
+	const PurgecssPlugin = require('purgecss-webpack-plugin');
+	let purgeCSSPlugin = new PurgecssPlugin({
+	    paths: glob.sync(`${build_const.sourceUrl}/**/*`,{ nodir: true }),
+	    whitelist: build_const.purifyCssWhiteList
+	});
+	判断为生产环境时加入purgeCSSPlugin到plugins数组即可。
+	whitelist：为白名单数组，形如：['*button*','red-button']
+	更多白名单设置规则参考：https://www.purgecss.com/whitelisting
+	
+3. 压缩css
+	安装optimize-css-assets-webpack-plugin, cssnano
+	npm install optimize-css-assets-webpack-plugin cssnano --save-dev
+	plugins配置加入：
+	const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+	let zipCSSAssetsPlugin = new OptimizeCSSAssetsPlugin({
+	    cssProcessor: cssnano,
+	    cssProcessorPluginOptions: {
+	        preset: ['default', { discardComments: { removeAll: true } }]
+	    },
+	    canPrint: false
+	})
+
+
+块分割(包含js和css块)：
+1. 通过配置多个入口人为分割块。
+	如：
+	{
+		polyfill: '@babel/polyfill',
+		app: build_const.entryUrl
+	}
+2. 通过动态加载人为分割块。
+	如：用import函数，require.ensure等，常用在路由配置中。
+3. 通过webpack自带插件分割块。
+	如：
+	cacheGroups:{
+        commons:{
+            test: /[\\/]node_modules[\\/]/,
+            name: "vendor",
+            chunks: "initial",
+            minChunks: 2,
+            priority: 2,
+        },
+        styles: {
+          name: 'styles',
+          test: /\.css$/,
+          chunks: 'all',
+          enforce: true,
+          priority: 20, 
+        },
+        react: {
+            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+            name: 'react',
+            chunks: "initial",
+            priority: 10,
+        },
+        antd: {
+            test: /[\\/]node_modules[\\/](antd)[\\/]/,
+            name: 'antd',
+            chunks: "initial",
+            priority: 11,
+        }
+    }
+
+js压缩：
+添加插件：uglifyjs-webpack-plugin
+const UglifyJsWebpackPlugin = require('uglifyjs-webpack-plugin');
+let uglifyjsWebpackPlugin = new UglifyJsWebpackPlugin({
+    cache: true,
+    parallel: true,
+    sourceMap: false,
+    uglifyOptions:{
+        ie8:false,
+        mangle: true,
+        keep_fnames: false,
+        toplevel: false,
+        compress: {
+            unused: true,
+            dead_code: true,
+            drop_debugger: true,
+            conditionals: true,
+            evaluate: true,
+            drop_console: false,
+            sequences: true,
+            booleans: true,
+            warnings: false
+        },
+        output: {
+            beautify: false
+        }
+    }
+});
+最后添加到optimization配置块中：
+minimizer: [uglifyjsWebpackPlugin]
+
+zip传输：
+安装插件：compression-webpack-plugin
+const CompressionWebpackPlugin = require('compression-webpack-plugin');
+let compressionPlugin = new CompressionWebpackPlugin({
+    test: new RegExp('\.(' +build_const.gzipFileExts.join('|') +')$'),
+    threshold: 10240,
+    minRatio: 0.8
+});
+gzipFileExts，包含扩展名的数组，如：['js','css','html','ico','jpg','png','ttf','woff']
+最后添加到plugins配置中。
+
+
+
+
