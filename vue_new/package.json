@@ -1,0 +1,28 @@
+{
+  "name": "vue_new",
+  "version": "1.0.0",
+  "description": "vue最新自定义打包配置",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:dev": "nodemon --watch build --exec \"webpack-dev-server --config build/webpack.config.js --env.env dev:dev\"",
+    "dev:mock": "nodemon --watch build --exec \"webpack-dev-server --config build/webpack.config.js --env.env dev:mock\"",
+    "dev:test": "nodemon --watch build --exec \"webpack-dev-server --config build/webpack.config.js --env.env dev:test\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "babel-loader": "^8.1.0",
+    "html-webpack-plugin": "^4.2.0",
+    "nodemon": "^2.0.3",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  },
+  "dependencies": {
+    "core-js": "^3.6.5"
+  }
+}
