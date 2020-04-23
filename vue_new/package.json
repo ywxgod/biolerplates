@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "eslint:chk": "eslint src",
+    "eslint:fix": "eslint --fix src",
     "dev:dev": "nodemon --watch build --exec \"webpack-dev-server --config build/webpack.config.js --env.env dev:dev\"",
     "dev:mock": "nodemon --watch build --exec \"webpack-dev-server --config build/webpack.config.js --env.env dev:mock\"",
     "dev:test": "nodemon --watch build --exec \"webpack-dev-server --config build/webpack.config.js --env.env dev:test\""
@@ -15,9 +17,16 @@
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
+    "babel-eslint": "^10.1.0",
     "babel-loader": "^8.1.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-loader": "^4.0.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-vue": "^6.2.2",
     "html-webpack-plugin": "^4.2.0",
     "nodemon": "^2.0.3",
+    "vue-eslint-parser": "^7.0.0",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.10.3"

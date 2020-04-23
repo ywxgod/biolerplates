@@ -15,7 +15,7 @@ devServer: {
 }
 ```
 
-### 如何减少webpack-dev-server控制台输出？每次输出一堆信息。
+### 如何减少webpack-dev-server控制台输出？避免每次输出一堆信息。
 
 devServer里面有个stats配置项，值可以是字符串，也可以是对象（包含了更详细的配置项），我们可以配置stats为errors-only这样可以减少大量的输出信息，应该能达到要求。如果想自己配置，那么下面的这个配置可以参考一下：
 
@@ -270,7 +270,204 @@ targets：指定特定浏览器添加polyfills
 
 配置babel-loader的时候，记得配置exclude。经过上面的一番折腾es6的最新特性如：?? - 操作符， ?. - 操作符等都已经可以使用，无需再在babel的配置文件中增加相对应的插件，也无需安装插件。
 
-如何安装eslint
+### 如何安装eslint
+
+从[eslint的网站](https://eslint.org/docs/user-guide/getting-started)上我们可以知道，直接执行以下命令
+
+```shell
+npm install eslint --save-dev
+```
+
+这样就在项目目录下安装了eslint，接着在package.json中加入以下命令：
+
+```shell
+"eslint": "eslint"
+```
+
+这样就可以通过npm来方便的执行eslint，接着创建eslint的配置文件，我们可以执行以下命令：
+
+```shell
+npm run eslint -- --init
+```
+
+这样就会启动一个创建向导，我们根据向导一步一步选择，即可创建完成。向导过程可能是下面这样的：
+
+```shell
+M:\****\biolerplates\vue_new>npm run eslint -- --init
+
+> vue_new@1.0.0 eslint M:\****\biolerplates\vue_new
+> eslint "--init"
+
+? How would you like to use ESLint? To check syntax, find problems, and enforce code style
+? What type of modules does your project use? JavaScript modules (import/export)
+? Which framework does your project use? Vue.js
+? Does your project use TypeScript? No
+? Where does your code run? Browser
+? How would you like to define a style for your project? Use a popular style guide
+? Which style guide do you want to follow? Airbnb: https://github.com/airbnb/javascript
+? What format do you want your config file to be in? JavaScript
+Checking peerDependencies of eslint-config-airbnb-base@latest
+The config that you've selected requires the following dependencies:
+
+eslint-plugin-vue@latest eslint-config-airbnb-base@latest eslint@^5.16.0 || ^6.8.0 eslint-plugin-import@^2.20.1
+? Would you like to install them now with npm? Yes
+Installing eslint-plugin-vue@latest, eslint-config-airbnb-base@latest, eslint@^5.16.0 || ^6.8.0, eslint-plugin-import@^2.20.1
+npm WARN vue_new@1.0.0 No repository field.
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@1.2.12 (node_modules\fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@1.2.12: wanted {"os":"darwin","arch":"any"} (current: {"os":"win32","arch":"x64"})
+npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@2.1.2 (node_modules\nodemon\node_modules\fsevents):
+npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.1.2: wanted {"os":"darwin","arch":"any"} (current: {"os":"win32","arch":"x64"})
+
++ eslint-config-airbnb-base@14.1.0
++ eslint-plugin-vue@6.2.2
++ eslint@6.8.0
++ eslint-plugin-import@2.20.2
+added 45 packages from 30 contributors and updated 1 package in 14.563s
+
+37 packages are looking for funding
+  run `npm fund` for details
+
+Successfully created .eslintrc.js file in M:\****\biolerplates\vue_new
+```
+
+生成的配置文件可以选择json，js等格式，这里选择js的，最终的文件可能是这样的：
+
+```javascript
+module.exports = {
+    env: {
+        browser: true,
+        es6: true,
+    },
+    extends: [
+        'plugin:vue/essential',
+        'airbnb-base',
+    ],
+    globals: {
+        Atomics: 'readonly',
+        SharedArrayBuffer: 'readonly',
+    },
+    parserOptions: {
+        ecmaVersion: 2018,
+        sourceType: 'module',
+    },
+    plugins: [
+        'vue',
+    ],
+    rules: {
+        "indent": ["error", 4]
+    },
+};
+```
+
+这样我们就可以在命令行执行eslint来检查我们的代码，执行以下命令：
+
+```shell
+npm run eslint -- .
+```
+
+如果有错误，将会看到类似下面的错误信息：
+
+```shell
+M:\****\biolerplates\vue_new>npm run eslint -- .
+
+> vue_new@1.0.0 eslint M:\****\biolerplates\vue_new
+> eslint "."
+
+
+M:\****\biolerplates\vue_new\build\entry.js
+  3:20  error  'action' is defined but never used  no-unused-vars
+  3:28  error  'target' is defined but never used  no-unused-vars
+
+M:\****\biolerplates\vue_new\build\output.js
+  3:20  error  'action' is defined but never used  no-unused-vars
+  3:28  error  'target' is defined but never used  no-unused-vars
+
+M:\****\biolerplates\vue_new\build\plugins.js
+   1:27  error  'html-webpack-plugin' should be listed in the project's dependencies, not devDependencies  import/no-extraneous-dependencies
+  13:20  error  'action' is defined but never used                                                         no-unused-vars
+  13:28  error  'target' is defined but never used                                                         no-unused-vars
+
+M:\****\biolerplates\vue_new\build\rules.js
+  1:20  error  'action' is defined but never used  no-unused-vars
+  1:28  error  'target' is defined but never used  no-unused-vars
+
+M:\****\biolerplates\vue_new\build\webpack.config.js
+  1:7  error  'config' is assigned a value but never used  no-unused-vars
+
+M:\****\biolerplates\vue_new\src\app\index.js
+  9:13  error  Parsing error: Unexpected token ?
+
+M:\****\biolerplates\vue_new\src\app\modules\main\eleui.js
+  1:17  error  Unable to resolve path to module 'vue'         import/no-unresolved
+  5:8   error  Unable to resolve path to module 'element-ui'  import/no-unresolved
+
+✖ 13 problems (13 errors, 0 warnings)
+```
+
+现在的问题是要如何修复这些错误，eslint提供了一个 --fix 参数可以自动修复，但是并不是所有的错误都能修复。
+
+```shell
+npm run eslint -- --fix .
+```
+
+这样会尝试修复能修复的错误，然后将未修复的重新打印出来，这些错误只能根据规则来手动修复了。
+
+为了在webpack打包之前进行代码检查，我们可以安装eslint-loader来处理。
+
+```javascript
+npm run install eslint-loader -D
+```
+
+然后配置webpack的解析规则：
+
+```javascript
+{
+    enforce: 'pre',
+    test: /\.m?js$/,
+    exclude: /node_modules/,
+    loader: 'eslint-loader'
+}
+```
+
+这样每次webpack进行打包之前会运行eslint来检查代码。
+
+### 对于最新的es特性：可选链式操作符 ?. 和 nullish操作符(??) , eslint会认为语法错误，这个怎么处理？
+
+此时需要安装babel-eslint，然后修改eslint的配置文件：
+
+```javascript
+parser: "babel-eslint",
+rules: {
+    strict: 0
+},
+```
+
+如果没什么意外，此时应该就可以了。但是上面我们按照安装向导选择了使用vue框架，eslint帮我们安装了有关vue的一些eslint插件，这个时候你会发现这些插件可能报错了，大概会有下面这样的信息：
+
+```shell
+ERROR in ./src/app/index.js
+Module Error (from ./node_modules/eslint-loader/dist/cjs.js):
+
+M:\****\biolerplates\vue_new\src\app\index.js
+   1:1   error    Use the latest vue-eslint-parser. See also https://eslint.vuejs.org/user-guide/#what-is-the-use-the-latest-vue-eslint-parser-error  vue/no-duplicate-attributes
+   1:1   error    Use the latest vue-eslint-parser. See also https://eslint.vuejs.org/user-guide/#what-is-the-use-the-latest-vue-eslint-parser-error  vue/no-template-key
+   1:1   error    Use the latest vue-eslint-parser. See also https://eslint.vuejs.org/user-guide/#what-is-the-use-the-latest-vue-eslint-parser-error  vue/no-textarea-mustache
+   ...
+   ...
+```
+
+直接点击提示中的链接我们可以找到解决的办法：
+
+```javascript
+parser: "vue-eslint-parser",
+parserOptions: {
+    parser: "babel-eslint",
+    ecmaVersion: 2018,
+    sourceType: 'module'
+}
+```
+
+如果你对eslint的某些规则感觉不适应，或是它本身确实让你感觉到难受，那我们可以修改eslint的规则，使之来适配我们的习惯，但建议我们还是去适应它，因为这些规则应该是大家都在遵守的规则。
 
 使用sass和css
 

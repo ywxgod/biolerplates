@@ -1,9 +1,13 @@
-module.exports = ([action, target]) => {
-    return [
-        {
-            test: /\.m?js$/,
-            exclude: /(node_modules|bower_components)/,
-            loader: 'babel-loader'
-        }
-    ];
-};
+module.exports = ([action, target]) => [
+    {
+        enforce: 'pre',
+        test: /\.m?js$/,
+        exclude: /node_modules/,
+        loader: 'eslint-loader'
+    },
+    {
+        test: /\.m?js$/,
+        exclude: /(node_modules|bower_components)/,
+        loader: 'babel-loader',
+    },
+];

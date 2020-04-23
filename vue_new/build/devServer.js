@@ -2,20 +2,19 @@ const config = require('./config');
 
 const proxyConfig = {
     mock: [
-        { context: ['/api'], target: 'http://localhost:3000' }
+        { context: ['/api'], target: 'http://localhost:3000' },
     ],
     dev: [
-        { context: ['/api'], target: 'http://134.234.43.33:8080' }
+        { context: ['/api'], target: 'http://134.234.43.33:8080' },
     ],
     test: [
-        { context: ['/api'], target: 'http://22.139.2.34' }
-    ]
+        { context: ['/api'], target: 'http://22.139.2.34' },
+    ],
 };
 
 
 module.exports = ([action, target]) => {
-
-    if(action !== 'dev') {
+    if (action !== 'dev') {
         return {};
     }
 
@@ -31,7 +30,7 @@ module.exports = ([action, target]) => {
         watchOptions: {
             poll: 1000,
             aggregateTimeout: 300,
-            ignored: /node_modules/
+            ignored: /node_modules/,
         },
         stats: {
             performance: true,
@@ -45,11 +44,10 @@ module.exports = ([action, target]) => {
             modules: false,
             warnings: true,
             entrypoints: false,
-            children: false
+            children: false,
         }, // errors-only
-        proxy: proxyConfig[target] || []
+        proxy: proxyConfig[target] || [],
     };
 
     return devServer;
-
 };
