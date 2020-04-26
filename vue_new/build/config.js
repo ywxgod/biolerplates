@@ -16,35 +16,5 @@ module.exports = {
     // 入口html模板
     template: path.join(__dirname, '../src/app/index.html'),
     // favicon
-    faviconUrl: path.join(__dirname, '../assets/images/favicon-marrio.ico'),
-
-    env: {
-        'dev:mock': {
-            mode: 'development'
-        },
-        'dev:dev': {
-            mode: 'development'
-        },
-        'dev:test': {
-            mode: 'development'
-        },
-        'build:dev': {
-            mode: 'production'
-        },
-        'build:test': {
-            mode: 'production'
-        },
-        'build:prod': {
-            mode: 'production'
-        },
-        'deploy:dev': {
-            mode: 'production'
-        },
-        'deploy:test': {
-            mode: 'production'
-        },
-        'deploy:prod': {
-            mode: 'production'
-        }
-    }
+    faviconUrl: path.join(__dirname, '../assets/images/favicon-marrio.ico')
 };
