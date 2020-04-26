@@ -1,5 +1,6 @@
 // app entry
 import add from './myModule';
+import '@assets/index.scss';
 
 console.log('hello, world');
 
@@ -10,5 +11,3 @@ const b = null;
 const x = b ?? 1;
 console.log(a?.c?.d);
 console.log(x);
-
-Promise.resolve();

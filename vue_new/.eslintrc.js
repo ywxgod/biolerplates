@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
     env: {
         browser: true,
@@ -18,11 +20,22 @@ module.exports = {
         sourceType: 'module',
     },
     plugins: [
-        'vue',
+        'vue'
     ],
+    settings: {
+        'import/resolver': {
+            alias: {
+                map: [
+                    ['@assets', './assets']
+                ],
+            }
+        }
+    },
     rules: {
         strict: 0,
         indent: ["error", 4],
-        'no-console': 0
+        "comma-dangle": ["error", "never"],
+        'no-console': 0,
+        'import/no-unresolved': 2
     },
 };

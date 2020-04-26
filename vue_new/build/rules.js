@@ -7,7 +7,15 @@ module.exports = ([action, target]) => [
     },
     {
         test: /\.m?js$/,
-        exclude: /(node_modules|bower_components)/,
-        loader: 'babel-loader',
+        exclude: /node_modules/,
+        loader: 'babel-loader'
     },
+    {
+        test: /\.s?[ac]ss$/,
+        use: [
+            'vue-style-loader',
+            { loader: 'css-loader', options: { importLoaders: 1 } },
+            'sass-loader'
+        ]
+    }
 ];

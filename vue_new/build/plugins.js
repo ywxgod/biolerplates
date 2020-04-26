@@ -6,13 +6,13 @@ const htmlWebpackPlugin = new HtmlWebpackPlugin({
     template: config.template,
     favicon: config.faviconUrl,
     hash: true,
-    minify: true,
+    minify: true
 });
 
 
 module.exports = ([action, target]) => {
     const plugins = [
-        htmlWebpackPlugin,
+        htmlWebpackPlugin
     ];
 
     return plugins;

@@ -20,31 +20,31 @@ module.exports = {
 
     env: {
         'dev:mock': {
-            mode: 'development',
+            mode: 'development'
         },
         'dev:dev': {
-            mode: 'development',
+            mode: 'development'
         },
         'dev:test': {
-            mode: 'development',
+            mode: 'development'
         },
         'build:dev': {
-            mode: 'production',
+            mode: 'production'
         },
         'build:test': {
-            mode: 'production',
+            mode: 'production'
         },
         'build:prod': {
-            mode: 'production',
+            mode: 'production'
         },
         'deploy:dev': {
-            mode: 'production',
+            mode: 'production'
         },
         'deploy:test': {
-            mode: 'production',
+            mode: 'production'
         },
         'deploy:prod': {
-            mode: 'production',
-        },
-    },
+            mode: 'production'
+        }
+    }
 };

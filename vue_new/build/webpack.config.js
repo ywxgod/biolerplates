@@ -1,7 +1,7 @@
-const config = require('./config');
 const entry = require('./entry');
 const output = require('./output');
 const rules = require('./rules');
+const resolve = require('./resolve');
 const plugins = require('./plugins');
 const devServer = require('./devServer');
 
@@ -9,7 +9,7 @@ const parseEnv = (env) => {
     const validEnvGroup = [
         'dev:mock', 'dev:dev', 'dev:test',
         'build:dev', 'build:test', 'build:prod',
-        'deploy:dev', 'deploy:test', 'deploy:prod',
+        'deploy:dev', 'deploy:test', 'deploy:prod'
     ];
     const envGroup = validEnvGroup.find((i) => i === env);
     if (!envGroup) { throw new Error('无效的命令'); }
@@ -26,6 +26,11 @@ module.exports = ({ env }) => {
         module: { rules: rules([action, target]) },
         devServer: devServer([action, target]),
         plugins: plugins([action, target]),
+        resolve: resolve([action, target]),
+        stats: {
+            entrypoints: false,
+            children: false
+        }
     };
 
     return webpackConfig;
