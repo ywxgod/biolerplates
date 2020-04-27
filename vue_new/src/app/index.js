@@ -1,13 +1,23 @@
 // app entry
-import add from './myModule';
-import '@assets/index.scss';
+import Vue from 'vue';
+import VMec from 'v-mec';
+import store from './store';
+import router from './routers';
+import './modules/main/eleui';
 
-console.log('hello, world');
+import App from './modules/main/App.vue';
 
-console.log(add(3, 3));
-const a = { a: 1, b: 2 };
-console.log({ ...a });
-const b = null;
-const x = b ?? 1;
-console.log(a?.c?.d);
-console.log(x);
+// eslint-disable-next-line no-unused-expressions
+import(/* webpackChunkName: "app_sync_style" */ '@assets/index.scss');
+
+Vue.config.devtools = false;
+
+Vue.use(VMec);
+
+new Vue({
+    el: '#app',
+    store,
+    router,
+    component: { App },
+    render: (h) => h(App)
+});

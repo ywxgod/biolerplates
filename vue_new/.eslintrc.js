@@ -36,6 +36,8 @@ module.exports = {
         indent: ["error", 4],
         "comma-dangle": ["error", "never"],
         'no-console': 0,
-        'import/no-unresolved': 2
+        'import/no-unresolved': 2,
+        'no-param-reassign': 0,
+        'no-new': 0
     },
 };

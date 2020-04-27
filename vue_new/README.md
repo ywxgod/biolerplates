@@ -620,3 +620,42 @@ const miniExtractCssPlugin = new MiniCssExtractPlugin({
 
 这样我们就可以将css文件分离出来，移动到dist/styles/***下面。
 
+如何支持vue文件
+
+首先，需要安装以下依赖：vue-loader，vue-template-compiler：
+
+```shell
+npm install -D vue-loader vue-template-compiler
+```
+
+然后，需要配置rules和plugins：
+
+```javascript
+{
+    test: /\.vue$/,
+    loader: 'vue-loader'
+}
+```
+
+引入插件：
+
+```javascript
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+
+// 在插件数组中加入vueloader插件
+module.exports = ([action, target]) => {
+    const plugins = [
+        new VueLoaderPlugin(),
+        htmlWebpackPlugin,
+        miniExtractCssPlugin
+    ];
+
+    return plugins;
+};
+```
+
+js运行时如何访问打包配置，根据打包配置设置一些调试输出信息。
+
+如何发布自己的npm包
+
+如何安装eleui，按需加载？

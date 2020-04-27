@@ -1,5 +1,8 @@
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const DefinePlugin = webpack.DefinePlugin;
 const config = require('./config');
 
 const htmlWebpackPlugin = new HtmlWebpackPlugin({
@@ -18,6 +21,11 @@ const miniExtractCssPlugin = new MiniCssExtractPlugin({
 
 module.exports = ([action, target]) => {
     const plugins = [
+        new VueLoaderPlugin(),
+        new DefinePlugin({
+            '$$_config': JSON.stringify(config),
+            '$$_ENV': JSON.stringify([action, target])
+        }),
         htmlWebpackPlugin,
         miniExtractCssPlugin
     ];

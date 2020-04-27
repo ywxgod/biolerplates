@@ -1,0 +1,16 @@
+// 基本样式
+html{
+  font-size: 62.5%;
+  color: #363636;
+  background-color: #F6F6F6;
+  font-family: BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif
+}
+
+body{
+  font-size: 1.2rem;
+  box-sizing: border-box;
+}
+
+*[class^='el-']{
+  font-size: 1.2rem;
+}

@@ -1,4 +1,6 @@
-$bgColor: red;
-body {
-  background-color: $bgColor;
-}
+@import "styles/_vars";
+@import "styles/normalize.css";
+@import "styles/animations";
+@import "styles/base";
+@import "styles/structure";
+@import "styles/eleui-override";
