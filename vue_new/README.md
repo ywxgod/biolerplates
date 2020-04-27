@@ -583,5 +583,40 @@ body {
 
 这样我们就可以用scss来写css了。其他的css预处理，也可以同理处理。
 
+如何分离css
 
+从上面的实现中，我们可以看到css文件因为是从index.js中加载的，所以最终被打包到了入口js中，而style-loader是在处理加载时发现css扩展名，将其拷贝到style标签中。这样我们的style标签中会出现我们定义的css代码，然后入口js中也会包含同样的css代码，所以我们要如何将其分离出来，保持一份css代码？
+
+得做三件事情：
+
+第一：安装mini-css-extract-plugin
+
+```shell
+npm install -D mini-css-extract-plugin
+```
+
+第二：修改css相关loader配置
+
+```javascript
+// const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+{
+    test: /\.s?[ac]ss$/,
+    use: [
+        MiniCssExtractPlugin.loader,
+        { loader: 'css-loader', options: { importLoaders: 1 } },
+        'sass-loader'
+    ]
+}
+```
+
+第三：增加plugins相关配置
+
+```javascript
+const miniExtractCssPlugin = new MiniCssExtractPlugin({
+    filename: './styles/[name]-[contenthash:8].css',
+    chunkFilename: './styles/chunk-[name]-[contenthash:8].css'
+});
+```
+
+这样我们就可以将css文件分离出来，移动到dist/styles/***下面。
 

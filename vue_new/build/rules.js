@@ -1,3 +1,5 @@
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
 module.exports = ([action, target]) => [
     {
         enforce: 'pre',
@@ -13,7 +15,7 @@ module.exports = ([action, target]) => [
     {
         test: /\.s?[ac]ss$/,
         use: [
-            'vue-style-loader',
+            MiniCssExtractPlugin.loader,
             { loader: 'css-loader', options: { importLoaders: 1 } },
             'sass-loader'
         ]
