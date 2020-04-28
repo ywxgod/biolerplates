@@ -16,5 +16,11 @@ module.exports = {
     // 入口html模板
     template: path.join(__dirname, '../src/app/index.html'),
     // favicon
-    faviconUrl: path.join(__dirname, '../assets/images/favicon-marrio.ico')
+    faviconUrl: path.join(__dirname, '../assets/images/favicon-marrio.ico'),
+    purgeCssWhiteList: [],
+    purgeCssWhiteListPatterns: [],
+    purgeCssWhiteListPatternChildren: [
+        /^el-button/, /^el-select/, /^el-tooltip/
+    ],
+    gzipFileExtensions: ['js', 'css', 'html', 'ico', 'jpg', 'png', 'ttf', 'woff']
 };

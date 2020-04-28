@@ -1,7 +1,7 @@
 <template>
     <transition name="fade">
 <!--        <router-view></router-view>-->
-        <el-button>hello</el-button>
+        <el-button class="my-btn">hello</el-button>
     </transition>
 </template>
 
@@ -12,5 +12,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
+.my-btn {
+    font-size: 50px;
+}
 </style>

@@ -1,11 +1,11 @@
 import Vue from 'vue';
 
 import {
-    Button, Select, Tooltip, Main, Container, Aside, Footer, Header, Link
+    Button
 } from 'element-ui';
 
 const uis = [
-    Button, Select, Tooltip, Main, Container, Aside, Footer, Header, Link
+    Button
 ];
 
 Vue.prototype.$ELEMENT = { size: 'small', zIndex: 3000 };

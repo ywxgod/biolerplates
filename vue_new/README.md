@@ -654,8 +654,162 @@ module.exports = ([action, target]) => {
 };
 ```
 
-js运行时如何访问打包配置，根据打包配置设置一些调试输出信息。
+## js运行时如何访问打包配置，根据打包配置设置一些调试输出信息。
 
-如何发布自己的npm包
+可以通过webpack自带的DefinePlugin插件，将需要运行时访问的数据传到全局对象上，如：
 
-如何安装eleui，按需加载？
+```javascript
+new DefinePlugin({
+    $$_config: JSON.stringify(config),
+    $$_ENV: JSON.stringify([action, target])
+}),
+```
+
+注意这里传入的数据需要通过JSON.stringify转换为字符串，后面在运行时访问时，我们可以这样：
+
+```javascript
+// eslint-disable-next-line no-undef
+const debug = $$_ENV[0] !== 'build';
+```
+
+## 如何产出生产环境包，并提供对产出包的分析？
+
+类似前面的开发命令，我们可以在package.json的scripts中添加打包命令：
+
+```shell
+"build:prod": "webpack --config build/webpack.config.js --env.env build:prod"
+```
+
+这里同样指定webpack的配置文件，然后传入参数：build:prod, 要分析查看产出的文件，我们需要用到webpack-bundle-analyzer插件，安装后，只要将其加入到plugins中即可：
+
+```javascript
+if (analyzer) {
+    plugins.push(new BundleAnalyzerPlugin());
+}
+```
+
+问题是我们不是所有命令都需要执行这个分析，所以需要在命令上传入第二个参数来区分是否需要对产出进行分析，修改命令如下：
+
+```shell
+"build:prod": "webpack --config build/webpack.config.js --env.env build:prod --env.analyzer 1"
+```
+
+这里在env对象上增加了analyzer属性，值为1表示需要进行分析。
+
+## 如何处理图片，字体，多媒体，office文档的加载？
+
+每一种文件都有自己的扩展名，我们只要将对于的扩展名解析配置加入到loaders中即可，对于资源的加载，我们还需要安装url-loader和file-loader
+
+```javascript
+{
+    test: /\.(jpg|jpeg|gif|bmp|png|ico)$/,
+    use: {
+        loader: 'url-loader',
+        options: {
+            limit: 10240,
+            publicPath: config.publicPath,
+            name: './images/[name]-[hash:8].[ext]'
+        }
+    }
+}, {
+    test: /\.(mp4|webm|ogg|mp3|wav|flac|aac|flv)(\?.*)?$/,
+    loader: 'url-loader',
+    options: {
+        limit: 10240,
+        publicPath: config.publicPath,
+        name: './media/[name].[hash:8].[ext]'
+    }
+}, {
+    test: /\.(svg|eot|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
+    use: {
+        loader: 'file-loader',
+        options: {
+            publicPath: config.publicPath,
+            name: './fonts/[name].[ext]'
+        }
+    }
+}
+```
+
+url-loader会在适当的时候将图片资源转为base64以减少请求，所以有个阈值设置，当超过这个值时，会调用file-loader来加载这个资源。
+
+## 如何安装eleui，按需加载，修改主题？
+
+根据官方文档，如果按需加载需要安装一个babel插件：babel-plugin-component，并做以下配置：
+
+```javascript
+[
+    'component',
+    {
+        libraryName: 'element-ui',
+        styleLibraryName: 'theme-chalk'
+    }
+]
+```
+
+上面的配置确实可以实现组件js文件和样式文件都按需加载，接着看如何实现自定义主题。官方提供以下配置：
+
+```scss
+// 覆盖element-ui的主题样式
+/* 改变主题色变量 */
+$--color-primary: #409EFF;
+$--color-success: #626E60;
+$--color-text-primary: #363636;
+$--color-text-regular: #363636;
+
+
+/* 改变 icon 字体路径变量，必需 */
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+
+@import "~element-ui/packages/theme-chalk/src/index";
+```
+
+第12行之前是对sass变量的修改，这样可以达到修改主题样式的目的，然后在第12行，加载了所有样式的源码文件。。。所以上面通过babel配置文件按需加载的样式已经成为多余，就是说如果既要自定义主题又要按需加载，样式是无法做到按需加载的，相反它还会多加载一份相同的样式。那么如何解决？
+
+要做到按需加载是不可能的，但我们至少可以不产出那份相同的多余的样式，可以让babel配置解析组件时，不加载该组件对应的样式，因为我们会在自定义主题那里将所有组件的样式都加载进来。配置如下：
+
+```javascript
+[
+    'component',
+    {
+        libraryName: 'element-ui',
+        style: false // style为false表示按需加载组件时，不再加载该组件对应的样式了
+    }
+]
+```
+
+## 如何去掉无用的css
+
+上面的步骤我们虽然减少了样式的重复，但还是不够。因为这里加载了所有组件的样式，里面存着很多没有用的样式，我们该如何去掉这些不用的样式呢？
+
+这里需要用到以下两个东西：glob，purgecss-webpack-plugin, 将purgecss-webpack-plugin实例添加到插件列表即可
+
+```javascript
+const purgeCSSPlugin = new PurgecssPlugin({
+    paths: glob.sync(`${config.src}/**/*`, { nodir: true }),
+    whitelist: config.purgeCssWhiteList,
+    whitelistPatterns: config.purgeCssWhiteListPatterns,
+    whitelistPatternsChildren: config.purgeCssWhiteListPatternChildren
+});
+```
+
+paths：指定需要分析的文件所在目录
+
+whitelist，whitelistPatterns，whitelistPatternsChildren都是样式名白名单，只是purgecss-webpack-plugin在样式文件中查找名称的方式不同，具体看文档。
+
+在实际的项目中，element-ui组件的样式都会被purgecss-webpack-plugin当成未用的样式而删掉，到目前为止笔者还没找到什么原因，或许是element-ui样式的引入方式不对导致purgecss-webpack-plugin识别不了，还是有其他原因。。。。
+
+目前能解决样式被误删的办法就是配置这些白名单，明确告诉purgecss-webpack-plugin保留这些样式，比如你要保留element-ui中按钮, 下拉，tooltip三个组件的样式，我们可以配置：
+
+```javascript
+whitelistPatternsChildren: [
+    /^el-button/, /^el-select/, /^el-tooltip/
+]
+```
+
+如何压缩css
+
+如何压缩js
+
+
+

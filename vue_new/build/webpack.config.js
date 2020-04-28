@@ -4,6 +4,7 @@ const rules = require('./rules');
 const resolve = require('./resolve');
 const plugins = require('./plugins');
 const devServer = require('./devServer');
+const optimization = require('./optimization');
 
 const parseEnv = (env) => {
     const validEnvGroup = [
@@ -16,22 +17,29 @@ const parseEnv = (env) => {
     return envGroup.split(':');
 };
 
-module.exports = ({ env }) => {
+module.exports = ({ env, analyzer }) => {
     const [action, target] = parseEnv(env);
+    const isDev = action === 'dev';
 
     const webpackConfig = {
-        mode: action === 'dev' ? 'development' : 'production',
+        mode: action === isDev ? 'development' : 'production',
         entry: entry([action, target]),
         output: output([action, target]),
         module: { rules: rules([action, target]) },
         devServer: devServer([action, target]),
-        plugins: plugins([action, target]),
+        plugins: plugins([action, target], analyzer),
         resolve: resolve([action, target]),
         stats: {
             entrypoints: false,
             children: false
         }
     };
+
+    if (isDev) {
+        webpackConfig.devtool = 'source-map';
+    } else {
+        webpackConfig.optimization = optimization([action, target]);
+    }
 
     return webpackConfig;
 };
