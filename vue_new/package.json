@@ -11,7 +11,8 @@
     "dev:dev": "nodemon --watch build --exec \"webpack-dev-server --config build/webpack.config.js --env.env dev:dev\"",
     "dev:mock": "nodemon --watch build --watch .eslintrc.js --watch babel.config.js --exec \"webpack-dev-server --config build/webpack.config.js --env.env dev:mock\"",
     "dev:test": "nodemon --watch build --exec \"webpack-dev-server --config build/webpack.config.js --env.env dev:test\"",
-    "build:prod": "webpack --config build/webpack.config.js --env.env build:prod"
+    "build:prod": "webpack --config build/webpack.config.js --env.env build:prod --display-error-details",
+    "build:serve": "npm run build:prod && cd dist && http-server -g -p 4205 -c864000 --push-state"
   },
   "keywords": [],
   "author": "",

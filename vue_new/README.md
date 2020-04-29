@@ -807,6 +807,21 @@ whitelistPatternsChildren: [
 ]
 ```
 
+上面vue文件中的样式被删掉的问题，已经找到解决办法，可以参考https://purgecss.com/guides/vue.html#use-the-vue-cli-plugin，修改配置，如下：
+
+```javascript
+const purgeCSSPlugin = new PurgecssPlugin({
+    paths: glob.sync(`${config.src}/**/*`, { nodir: true }),
+    whitelist: [],
+    whitelistPatterns: [/-(leave|enter|appear)(|-(to|from|active))$/, /^(?!(|.*?:)cursor-move).+-move$/, /^router-link(|-exact)-active$/, /data-v-.*/],
+    whitelistPatternsChildren: [],
+    defaultExtractor(content) {
+        const contentWithoutStyleBlocks = content.replace(/<style[^]+?<\/style>/gi, '');
+        return contentWithoutStyleBlocks.match(/[A-Za-z0-9-_/:]*[A-Za-z0-9-_/]+/g) || [];
+    }
+});
+```
+
 如何压缩css
 
 如何压缩js

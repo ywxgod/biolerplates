@@ -18,9 +18,7 @@ module.exports = {
     // favicon
     faviconUrl: path.join(__dirname, '../assets/images/favicon-marrio.ico'),
     purgeCssWhiteList: [],
-    purgeCssWhiteListPatterns: [],
-    purgeCssWhiteListPatternChildren: [
-        /^el-button/, /^el-select/, /^el-tooltip/
-    ],
+    purgeCssWhiteListPatterns: [/-(leave|enter|appear)(|-(to|from|active))$/, /^(?!(|.*?:)cursor-move).+-move$/, /^router-link(|-exact)-active$/, /data-v-.*/],
+    purgeCssWhiteListPatternChildren: [],
     gzipFileExtensions: ['js', 'css', 'html', 'ico', 'jpg', 'png', 'ttf', 'woff']
 };

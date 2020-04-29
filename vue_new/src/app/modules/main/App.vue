@@ -14,5 +14,9 @@ export default {
 <style scoped lang="scss">
 .my-btn {
     font-size: 50px;
+    background-color: chocolate;
+    span {
+        background-color: aquamarine;
+    }
 }
 </style>

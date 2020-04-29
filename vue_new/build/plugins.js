@@ -7,7 +7,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const PurgecssPlugin = require('purgecss-webpack-plugin');
-// const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin');
+const HtmlCriticalWebpackPlugin = require('html-critical-webpack-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
@@ -30,9 +30,14 @@ const miniExtractCssPlugin = new MiniCssExtractPlugin({
 
 const purgeCSSPlugin = new PurgecssPlugin({
     paths: glob.sync(`${config.src}/**/*`, { nodir: true }),
+    rejected: true,
     whitelist: config.purgeCssWhiteList,
     whitelistPatterns: config.purgeCssWhiteListPatterns,
-    whitelistPatternsChildren: config.purgeCssWhiteListPatternChildren
+    whitelistPatternsChildren: config.purgeCssWhiteListPatternChildren,
+    defaultExtractor(content) {
+        const contentWithoutStyleBlocks = content.replace(/<style[^]+?<\/style>/gi, '');
+        return contentWithoutStyleBlocks.match(/[A-Za-z0-9-_/:]*[A-Za-z0-9-_/]+/g) || [];
+    }
 });
 
 const zipCSSAssetsPlugin = new OptimizeCSSAssetsPlugin({
@@ -49,19 +54,19 @@ const compressionPlugin = new CompressionWebpackPlugin({
     minRatio: 0.8
 });
 
-// const htmlCriticalWebpackPlugin = new HtmlCriticalWebpackPlugin({
-//     base: config.output,
-//     src: 'index.html',
-//     dest: 'index.html',
-//     inline: true,
-//     minify: true,
-//     extract: true,
-//     width: 375,
-//     height: 565,
-//     penthouse: {
-//         blockJSRequests: false
-//     }
-// });
+const htmlCriticalWebpackPlugin = new HtmlCriticalWebpackPlugin({
+    base: config.output,
+    src: 'index.html',
+    dest: 'index.html',
+    inline: true,
+    minify: true,
+    extract: true,
+    width: 375,
+    height: 565,
+    penthouse: {
+        blockJSRequests: false
+    }
+});
 
 
 module.exports = ([action, target], analyzer) => {
@@ -86,7 +91,7 @@ module.exports = ([action, target], analyzer) => {
         plugins.push(purgeCSSPlugin);
         plugins.push(zipCSSAssetsPlugin);
         plugins.push(compressionPlugin);
-        // plugins.push(htmlCriticalWebpackPlugin);
+        plugins.push(htmlCriticalWebpackPlugin);
     }
 
     return plugins;

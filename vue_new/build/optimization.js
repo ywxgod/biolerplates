@@ -49,14 +49,12 @@ module.exports = ([action, target]) => {
                         return `npm.${chkName}`;
                     }
                 },
-                style: {
-                    test: /[\\/]vue_new\/assets[\\/]/,
+                cc: {
+                    test: /\.vue$/,
                     priority: 30,
-                    name(module) {
-                        let packageName = module.context;
-                        console.log(packageName, '---');
-                        return 'app.style';
-                    }
+                    enforce: true,
+                    name: 'style_in_vue',
+                    chunks: 'all'
                 }
             }
         }
