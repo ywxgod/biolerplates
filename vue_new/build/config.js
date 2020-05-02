@@ -4,7 +4,7 @@ module.exports = {
     // 本地端口 - 没有做端口检测，如果发现冲突换一个即可，或是检查nodejs是否正常退出
     port: 4201,
     // 本地域名
-    host: 'id.wyin.xyz',
+    host: '0.0.0.0',
     // 网站根目录
     publicPath: '/',
     // 入口文件

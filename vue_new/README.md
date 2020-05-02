@@ -822,9 +822,54 @@ const purgeCSSPlugin = new PurgecssPlugin({
 });
 ```
 
-如何压缩css
+## 如何压缩css
+
+前面我们讨论了如何按需加载组件，如何去掉没用到的css，现在看看压缩css是怎么做到的。压缩css其实就是想压缩js有点像，它主要是去掉各种空白。安装插件：optimize-css-assets-webpack-plugin，并配置：
+
+```javascript
+const zipCSSAssetsPlugin = new OptimizeCSSAssetsPlugin({
+    cssProcessor: cssnano,
+    cssProcessorPluginOptions: {
+        preset: ['default', { discardComments: { removeAll: true } }]
+    },
+    canPrint: false
+});
+```
+
+配置项cssProcessor的值可以是cssnano，这里我们需要安装cssnano。
+
+> `cssProcessor`: The CSS processor used to optimize \ minimize the CSS, defaults to [`cssnano`](http://github.com/ben-eb/cssnano). This should be a function that follows `cssnano.process` interface (receives a CSS and options parameters and returns a Promise).
 
 如何压缩js
+
+可以通过uglifyjs-webpack-plugin或者terser-webpack-plugin来进行js压缩，此处给出uglifyjs配置的一个例子:
+
+```javascript
+const uglifyjsWebpackPlugin = new UglifyJsWebpackPlugin({
+    cache: true,
+    parallel: true,
+    sourceMap: false,
+    uglifyOptions: {
+        ie8: false,
+        mangle: true,
+        keep_fnames: false,
+        toplevel: false,
+        compress: {
+            unused: true,
+            dead_code: true,
+            drop_debugger: true,
+            conditionals: true,
+            evaluate: true,
+            drop_console: false,
+            sequences: true,
+            booleans: true
+        },
+        output: {
+            beautify: false
+        }
+    }
+});
+```
 
 
 
