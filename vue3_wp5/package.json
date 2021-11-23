@@ -1,0 +1,49 @@
+{
+  "name": "vue3_wp5",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "wp --config ./build/wp.config.js --env prod",
+    "build:modern": "wp --config ./build/wp.config.js --env prod --browser modern",
+    "build:legacy": "wp --config ./build/wp.config.js --env prod --browser legacy",
+    "build:defaults": "wp --config ./build/wp.config.js --env prod --browser defaults",
+    "build:chrome": "wp --config ./build/wp.config.js --env prod --browser chrome",
+    "dev:test": "nodemon --watch ./build --exec \"npm run _dev:test\"",
+    "dev:mock": "nodemon --watch ./build --exec \"npm run _dev:mock\"",
+    "_dev:mock": "wp --config ./build/wp.config.js --env mock",
+    "_dev:test": "wp --config ./build/wp.config.js --env test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.16.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.16.0",
+    "@babel/plugin-transform-runtime": "^7.16.4",
+    "@babel/preset-env": "^7.16.4",
+    "@vue/compiler-sfc": "^3.2.22",
+    "babel-loader": "^8.2.3",
+    "css-loader": "^6.5.1",
+    "glob": "^7.2.0",
+    "mini-css-extract-plugin": "^2.4.5",
+    "mini-html-webpack-plugin": "^3.1.3",
+    "nodemon": "^2.0.15",
+    "purgecss-webpack-plugin": "^4.0.3",
+    "sass": "^1.43.4",
+    "sass-loader": "^12.3.0",
+    "style-loader": "^3.3.1",
+    "terser-webpack-plugin": "^5.2.5",
+    "vue-loader": "^16.8.3",
+    "webpack": "^5.64.1",
+    "webpack-nano": "^1.1.1",
+    "webpack-plugin-serve": "^1.5.0"
+  },
+  "dependencies": {
+    "@babel/runtime-corejs3": "^7.16.3",
+    "core-js": "^3.19.1",
+    "vue": "^3.2.22"
+  }
+}
