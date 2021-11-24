@@ -1,5 +1,4 @@
 const TerserPlugin = require("terser-webpack-plugin");
-const {pack} = require("core-js/internals/ieee754");
 
 module.exports = () => {
     return {
